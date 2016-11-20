@@ -13,7 +13,10 @@ OBJ         = $(patsubst %,out/%,$(SOURCES:.cpp=.o))
 
 all: $(TARGET)
 
-test: splay
+test: heap splay
+
+heap:  heap.py $(TARGET)
+	$(PYTHON) $<
 
 splay: splay.py $(TARGET)
 	$(PYTHON) $<
@@ -21,7 +24,7 @@ splay: splay.py $(TARGET)
 pybind11:
 	git clone https://github.com/pybind/pybind11.git
 
-$(TARGET) : $(OBJ)
+$(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $@ $(LDFLAGS)
 
 out/%.o: src/%.cpp $(DEPS) $(HEADERS)
