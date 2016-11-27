@@ -3,11 +3,15 @@
 
 #include <pybind11/pybind11.h>
 
+#include <list>
 #include <vector>
-#include <iostream>
 #include <stdexcept>
+#include <iostream>
 using namespace std;
 
+//
+// - simple binary heap backed up by a STL vector
+//
 struct binary_heap
 {
     binary_heap()
@@ -44,9 +48,9 @@ struct binary_heap
             auto left  = 2 * i;
             auto right = 2 * i + 1;
 
-            if(left <= raw.size() && _cmp(raw[i - 1], raw[left - 1]) < 0)
+            if(left <= raw.size() && _cmp(raw[i - 1], raw[left - 1]) > 0)
             {
-                if(right <= raw.size() && _cmp(raw[left - 1], raw[right - 1]) < 0)
+                if(right <= raw.size() && _cmp(raw[left - 1], raw[right - 1]) > 0)
                 {
                     swap(raw[i - 1], raw[right - 1]);
                     i = right;
@@ -58,9 +62,9 @@ struct binary_heap
                 }
 
             }
-            else if(right <= raw.size() && _cmp(raw[i - 1], raw[right - 1]) < 0)
+            else if(right <= raw.size() && _cmp(raw[i - 1], raw[right - 1]) > 0)
             {
-                if(left <= raw.size() && _cmp(raw[right - 1], raw[left - 1]) < 0)
+                if(left <= raw.size() && _cmp(raw[right - 1], raw[left - 1]) > 0)
                 {
                     swap(raw[i - 1], raw[left - 1]);
                     i = left;
@@ -88,7 +92,7 @@ struct binary_heap
         while(i > 1)
         {
             size_t up = i / 2;
-            if(_cmp(raw[i - 1], raw[up - 1]) > 0) swap(raw[i - 1], raw[up - 1]);
+            if(_cmp(raw[i - 1], raw[up - 1]) < 0) swap(raw[i - 1], raw[up - 1]);
             i = up;
         }
     }
@@ -108,8 +112,8 @@ struct binary_heap
         return raw.size();
     }
 
-    vector<pybind11::object> raw;
-    size_t swaps;
+    vector<pybind11::object>    raw;
+    size_t                      swaps;
 
     static void bind(pybind11::module m)
     {

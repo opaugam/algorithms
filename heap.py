@@ -9,7 +9,7 @@ if __name__ == '__main__':
     # - randomize it
     # - setup our heap
     #
-    MAX = 1000000
+    MAX = 10
     R = range(0, MAX)
     random.shuffle(R)
     heap = stub.binary_heap(R)
@@ -18,8 +18,11 @@ if __name__ == '__main__':
     # - pop the whole heap
     # - make sure each entries are following sequentially
     #
-    last = MAX
+    last = -1
     while len(heap):
         cur = heap.pop()
-        assert cur == last - 1
+        print cur
+        assert cur == last + 1
         last = cur
+
+    heap = stub.binomial_heap([1,2,3])

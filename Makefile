@@ -1,6 +1,6 @@
-.PHONY : all test clean splay
+.PHONY : all test clean heap hashing
 
-CC          = g++
+CXX         = g++
 PYTHON      = /usr/local/bin/python
 CPPFLAGS    = -fPIC -g -std=c++11 -Wall -pedantic
 LDFLAGS     = -shared `python-config --ldflags`
@@ -15,20 +15,20 @@ all: $(TARGET)
 
 test: heap splay
 
-heap:  heap.py $(TARGET)
+heap: heap.py $(TARGET)
 	$(PYTHON) $<
 
-splay: splay.py $(TARGET)
+hashing: hashing.py $(TARGET)
 	$(PYTHON) $<
 
 pybind11:
 	git clone https://github.com/pybind/pybind11.git
 
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $@ $(LDFLAGS)
+	$(CXX) $(OBJ) -o $@ $(LDFLAGS)
 
 out/%.o: src/%.cpp $(DEPS) $(HEADERS)
-	$(CC) -c -o $@ $< $(CPPFLAGS) -Isrc -Ipybind11/include `python-config --cflags`
+	$(CXX) -c -o $@ $< $(CPPFLAGS) -Isrc -Ipybind11/include `python-config --cflags`
 
 clean:
 	rm -rf out $(TARGET)
