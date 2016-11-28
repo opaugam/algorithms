@@ -13,9 +13,9 @@ struct hashes
 {
     static long simple_xor(const string &key)
     {
-        unsigned long H = 0;
-        unsigned char *p = (unsigned char *)key.c_str();
-        for(; *p != '\0'; ++p)
+        unsigned int H = 0;
+        auto *p = (unsigned char *)key.data();
+        for(size_t n = 0; n < key.size(); ++p, ++n)
         {
             H += *p;
         }
@@ -24,9 +24,9 @@ struct hashes
 
     static long rotating_xor(const string &key)
     {
-        unsigned long H = 0;
-        unsigned char *p = (unsigned char *)key.c_str();
-        for(; *p != '\0'; ++p)
+        unsigned int H = 0;
+        auto *p = (unsigned char *)key.data();
+        for(size_t n = 0; n < key.size(); ++p, ++n)
         {
             H = (H << 4) ^ (H >> 28) ^ *p;
         }
@@ -35,9 +35,9 @@ struct hashes
 
     static long bernstein(const string &key)
     {
-        unsigned long H = 0;
-        unsigned char *p = (unsigned char *)key.c_str();
-        for(; *p != '\0'; ++p)
+        unsigned int H = 0;
+        auto *p = (unsigned char *)key.data();
+        for(size_t n = 0; n < key.size(); ++p, ++n)
         {
             H = 33 * H + *p;
         }
@@ -46,9 +46,9 @@ struct hashes
 
     static long shift_add_xor(const string &key)
     {
-        unsigned long H = 0;
-        unsigned char *p = (unsigned char *)key.c_str();
-        for(; *p != '\0'; ++p)
+        unsigned int H = 0;
+        auto *p = (unsigned char *)key.data();
+        for(size_t n = 0; n < key.size(); ++p, ++n)
         {
             H ^= (H << 5) + (H >> 2) + *p;
         }
@@ -57,20 +57,20 @@ struct hashes
 
     static long fnv(const string &key)
     {
-        unsigned long H = 2166136261;
-        unsigned char *p = (unsigned char *)key.c_str();
-        for(; *p != '\0'; ++p)
+        unsigned int H = 2166136261;
+        auto *p = (unsigned char *)key.data();
+        for(size_t n = 0; n < key.size(); ++p, ++n)
         {
             H = (H * 16777619) ^ *p;
         }
         return H;
     }
 
-    static long jenkins(const string &key)
+    static long one_at_a_time(const string &key)
     {
-        unsigned long H = 2166136261;
-        unsigned char *p = (unsigned char *)key.c_str();
-        for(; *p != '\0'; ++p)
+        unsigned int H = 2166136261;
+        auto *p = (unsigned char *)key.data();
+        for(size_t n = 0; n < key.size(); ++p, ++n)
         {
             H += *p;
             H += (H << 10);
@@ -91,7 +91,7 @@ struct hashes
         m.def("bernstein",      &bernstein, "");
         m.def("shift_add_xor",  &shift_add_xor, "");
         m.def("fnv",            &fnv, "");
-        m.def("jenkins",        &jenkins, "");
+        m.def("one_at_a_time",  &one_at_a_time, "");
     }
 };
 
